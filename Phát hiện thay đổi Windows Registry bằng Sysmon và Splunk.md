@@ -2,8 +2,6 @@
 
 - Giám sát và phát hiện thay đổi của windows rgistry bằng sysmon và splunk.
 
-[Tài liệu hướng dẫn](https://github.com/0xrajneesh/90-days-security-challenge/blob/main/Challenge%232/Task%203%3A%20Monitoring%20Windows%20Registry%20Changes.md)
-
 ## Sơ đồ mạng
 
 <img width="676" height="450" alt="image" src="https://github.com/user-attachments/assets/cac5ce25-aed7-4853-82e4-cd9dd245aeea" />
@@ -29,6 +27,8 @@
 - **Splunk Enterprise**: Là một nền tảng SIEM mạnh mẽ hỗ trợ thu thập, tìm kiếm, phân tích, cảnh báo và trực quan hóa dữ liệu log từ nhiều nguồn.
 
 ## Thực hành
+
+- [Tài liệu hướng dẫn](https://github.com/0xrajneesh/90-days-security-challenge/blob/main/Challenge%232/Task%203%3A%20Monitoring%20Windows%20Registry%20Changes.md)
 
 - **Bước 1**: Tạo các index trên splunk enterprise:
 
