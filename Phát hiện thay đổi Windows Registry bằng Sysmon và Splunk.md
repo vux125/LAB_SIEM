@@ -2,6 +2,8 @@
 
 - Giám sát và phát hiện thay đổi của windows rgistry bằng sysmon và splunk.
 
+[Tài liệu hướng dẫn](https://github.com/0xrajneesh/90-days-security-challenge/blob/main/Challenge%232/Task%203%3A%20Monitoring%20Windows%20Registry%20Changes.md)
+
 ## Sơ đồ mạng
 
 <img width="676" height="450" alt="image" src="https://github.com/user-attachments/assets/cac5ce25-aed7-4853-82e4-cd9dd245aeea" />
@@ -166,10 +168,11 @@ Xóa giá trị MalwareSimulation trong Run Key của người dùng hiện tạ
 
   ****Đề xuất điều tra:****
   
-  ***+*Nếu hành vi là chủ động hợp pháp (từ người dùng, bảo mật...), ghi nhận là hợp lệ.*****
+  *****Nếu hành vi là chủ động hợp pháp (từ người dùng, bảo mật...), ghi nhận là hợp lệ.*****
 
   *****Nếu hành vi là từ mã độc hoặc nghi ngờ mã độc tự xóa dấu vết, cần:*****
 
   + Kiểm tra toàn bộ host để tìm file độc hại khác.
 
   + Kiểm tra các persistence khác như Scheduled Task, Service...
+
