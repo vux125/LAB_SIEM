@@ -14,6 +14,8 @@
 
 ## Thực hành
 
+- [Tài liệu hướng dẫn](https://github.com/0xrajneesh/90-days-security-challenge/blob/main/Challenge%232/Task%201%3A%20Investigating%20RDP%20Brute-Force%20Attacks%20on%20Windows%20Login.md)
+
 **Bước 1:** Mở dịch vụ RDP trên winsows 10
 
 <img width="1164" height="682" alt="image" src="https://github.com/user-attachments/assets/04b7f62b-4ae5-4671-a127-8afa611c618b" />
