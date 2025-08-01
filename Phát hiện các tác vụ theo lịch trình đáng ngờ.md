@@ -52,8 +52,20 @@
 
 3. Báo cáo
 
+a. Thông tin chung
 
-4. 
+
+| Mục                  | Nội dung                                                             |
+| -------------------- | -------------------------------------------------------------------- |
+| Tiêu đề sự cố        | Phát hiện các tác vụ được lên lịch đáng ngờ trên máy VUTV_B22DCAT318 |
+| Ngày phát hiện       | 31/07/2025                                                           |
+| Pháy hiện bởi        | Splunk SIEM (Sysmon)                               |
+| Mức độ nghiêm trọng  | Trung bình                                    |
+| Trạng thái           | Đang đuọc điều tra                                                   |
+
+b. 
+
+5. 
 
 
 
