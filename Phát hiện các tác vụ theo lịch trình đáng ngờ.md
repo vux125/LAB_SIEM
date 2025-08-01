@@ -54,18 +54,100 @@
 
 a. Thông tin chung
 
+- Hệ điều hành: Windows 10 (Build 19041.1503)
 
-| Mục                  | Nội dung                                                             |
-| -------------------- | -------------------------------------------------------------------- |
-| Tiêu đề sự cố        | Phát hiện các tác vụ được lên lịch đáng ngờ trên máy VUTV_B22DCAT318 |
-| Ngày phát hiện       | 31/07/2025                                                           |
-| Pháy hiện bởi        | Splunk SIEM (Sysmon)                               |
-| Mức độ nghiêm trọng  | Trung bình                                    |
-| Trạng thái           | Đang đuọc điều tra                                                   |
+- Nguồn phát hiện: Splunk + Sysmon (EventCode=1 – Process Create)
 
-b. 
+- Máy tính liên quan: VUTV_B22DCAT318.B22DCAT318.ptit
 
-5. 
+- User liên quan: bblack (SID: S-1-5-18)
 
+- Process đáng ngờ: `schtasks.exe` với command line `/run /tn MaliciousTask`                                         |
 
+b. Tóm tắt sự cố
 
+- Quá trình theo dõi log hệ thống qua Sysmon cho thấy việc thực thi nhiều tác vụ theo lịch trình thông qua schtasks.exe. Một trong các lệnh đặc biệt đáng ngờ là:
+
+`C:\Windows\System32\schtasks.exe /run /tn MaliciousTask`
+
+c. Nguồn phát hiện
+
+- Sysmon Log (EventCode 1 – Process Create)
+
+- Splunk Query: `index=windows_sysmon_logs EventCode=1 Image="*schtasks.exe"`
+
+d. Dữ liệu kỹ thuật
+
+- CommandLine đáng ngờ:
+`schtasks.exe /run /tn MaliciousTask`
+
+- Đường dẫn Image:
+`C:\Windows\System32\schtasks.exe`
+
+- ParentCommandLine:
+`Không xác định (chưa cung cấp)`
+
+- Tệp XML chứa các nhiệm vụ khác:
+`"C:\ProgramData\Microsoft\ClickToRun\..."`
+
+- Hash file đáng ngờ:
+
+  + MD5: `76C0662E6D0834BD4A24EA6561B4DC42`
+ 
+  + SHA256: `01C30E1EDF01C3980FAD548187ACA8365E951A5CCEFFDB910F7D8B0AD2BE8F`
+
+e. Phân tích sự cố
+
+- Việc chạy một Scheduled Task tên "MaliciousTask" là cực kỳ nghi ngờ – không trùng với bất kỳ scheduled task hợp lệ nào của hệ điều hành hoặc ứng dụng đã biết.
+
+- Dấu hiệu cho thấy khả năng attacker sử dụng tác vụ theo lịch trình để:
+
+- Tự động hóa thực thi mã độc.
+
+- Duy trì sự hiện diện lâu dài (persistence).
+
+- Tránh bị phát hiện thông qua các kỹ thuật Windows hợp pháp.
+
+- Việc này có thể là hậu quả của việc khai thác ban đầu hoặc kỹ thuật living-off-the-land (LOLBins).
+
+f. Đánh giá tác động
+
+- Mức độ nghiêm trọng: Cao
+
+- Ảnh hưởng tiềm tàng:
+
+  + Tác vụ tự động chạy mã độc vào thời gian nhất định.
+
+  + Gây nguy cơ mã hóa dữ liệu, đánh cắp thông tin, kết nối với C2.
+
+  + Có thể cho thấy giai đoạn tiếp theo của tấn công (privilege escalation hoặc persistence).
+
+g. Biện pháp đã thực hiện
+
+- Xác định và ghi lại toàn bộ lệnh schtasks.exe trong 24 giờ qua.
+
+- Phân tích các scheduled tasks bằng công cụ như:
+
+  + schtasks /query /fo LIST /v
+
+  + Get-ScheduledTask
+
+- Xóa tác vụ "MaliciousTask".
+
+- Thực hiện hash checking trên các binary liên quan.
+
+- Quét hệ thống bằng phần mềm MalwareByteMalwareBytes.s
+
+h. Đề xuất khắc phục
+
+- Tăng cường giám sát hành vi schtasks.exe, đặc biệt là với các tham số /create, /run, /change.
+
+- Thiết lập cảnh báo trên Splunk với điều kiện:
+`CommandLine=*schtasks.exe* AND CommandLine IN ("*run*", "*create*", "*change*") AND NOT task_name IN whitelist`
+
+- Kiểm tra scheduled task registry:
+`HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks`
+
+- Nếu có nghi ngờ APT, thực hiện memory dump và forensic phân tích sâu hơn.
+
+- Triển khai AppLocker để kiểm soát việc thực thi schtasks.exe.
