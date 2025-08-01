@@ -133,8 +133,6 @@ g. Biện pháp đã thực hiện
 
 - Quét máy VUTV_B22DCAT318 bằng phần mềm EDR/AV.
 
-- Kiểm tra xem AV có phát hiện EICAR không.
-
 - Kiểm tra tài khoản nào thực thi PowerShell.
 
 - Audit thêm EventID 4688 (Process Creation) và 4103 (Module Load) để xác định toàn bộ chuỗi hành vi.
