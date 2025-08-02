@@ -42,9 +42,15 @@ Nhiệm vụ này bao gồm phát hiện việc tạo, sửa đổi và xóa t�
 
 3. Phát hiện 
 
+- Log tạo file:
+ 
 <img width="1129" height="439" alt="image" src="https://github.com/user-attachments/assets/3138d309-64c2-47f8-b1b6-dc74f6de603c" />
 
+- Log ghi đè file:
+
 <img width="1129" height="439" alt="image" src="https://github.com/user-attachments/assets/a4093093-cf9a-44d7-8c3e-1c4ac1c19287" />
+
+- Log xóa file:
 
 <img width="1129" height="439" alt="image" src="https://github.com/user-attachments/assets/05f98938-b81a-44a5-919a-ed0ffef2afda" />
 
