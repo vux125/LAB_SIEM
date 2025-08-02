@@ -40,28 +40,82 @@ Nhiệm vụ này bao gồm phát hiện việc tạo, sửa đổi và xóa t�
 
 <img width="722" height="79" alt="image" src="https://github.com/user-attachments/assets/79e87c4f-90ce-4c17-a3b0-58f532c6e34a" />
 
-3. Phát hiện và điều tra
+3. Phát hiện 
 
-- Tìm kiếm Nhật ký Sysmon trong Splunk:
-  
-`index=sysmon_logs EventCode=11 TargetFilename="*System32*" OR TargetFilename="*Program Files*" | stats count by TargetFilename, Image, User`
+<img width="1129" height="439" alt="image" src="https://github.com/user-attachments/assets/3138d309-64c2-47f8-b1b6-dc74f6de603c" />
 
-- Phát hiện các sửa đổi tệp :
+<img width="1129" height="439" alt="image" src="https://github.com/user-attachments/assets/a4093093-cf9a-44d7-8c3e-1c4ac1c19287" />
 
-`index=sysmon_logs EventCode=15 TargetFilename="*System32*" | stats count by TargetFilename, Image, User`
+<img width="1129" height="439" alt="image" src="https://github.com/user-attachments/assets/05f98938-b81a-44a5-919a-ed0ffef2afda" />
 
-- Phát hiện xóa tệp :
+4. Báo cáo
 
-`index=sysmon_logs EventCode=23 TargetFilename="*System32*" | stats count by TargetFilename, Image, User`
+a. Thông tin chung
 
-- Liên hệ các sự kiện với quá trình tạo ra quy trình:
+- Tên sự cố: PowerShell Abuse - Tạo & Thao Tác Tập Tin Hệ Thống
 
-`index=sysmon_logs (EventCode=1 OR EventCode=11 OR EventCode=23) | transaction ProcessId maxspan=1m`
+- Ngày phát hiện: 02/08/2025
 
-- Trực quan hóa hoạt động của tệp trong Splunk:
+- Hệ thống bị ảnh hưởng: VUTV_B22DCAT318.B22DCAT318.ptit
 
-  - Biểu đồ thanh về các tệp được sửa đổi nhiều nhất trong các thư mục quan trọng.
+- Nguồn phát hiện: Splunk SIEM - PowerShell Logs (EventCode 4104)
 
-  - Biểu đồ tròn về người dùng thực hiện thay đổi tệp.
+b. Tóm tắt sự cố
 
-  - Dòng thời gian của các hoạt động lưu trữ để có thông tin điều tra.
+- Ba lệnh PowerShell đáng ngờ được phát hiện thực thi liên tục trong khoảng thời gian ngắn, có thể là dấu hiệu của hành vi tấn công hoặc thử nghiệm phá hoại hệ thống thông qua PowerShell:
+
+  - Tạo file thực thi độc hại (malicious.exe) trong thư mục C:\Windows\System32.
+
+  - Ghi đè file cấu hình hệ thống (config.sys) bằng nội dung lạ.
+
+  - Xóa file thư viện quan trọng (important.dll) trong thư mục hệ thống.  
+
+c. Dữ liệu kỹ thuật
+
+- Thời gian	ScriptBlock ID	Command thực thi
+
+  - 09:20:41 PM	460bd9df-ab25-4580-95a7-4d55bddea93d	echo MaliciousContent > C:\Windows\System32\malicious.exe
+
+  - 09:21:13 PM	b00fca56-e977-4a3c-9a53-4dfef150143d	echo AlteredContent >> C:\Windows\System32\config.sys
+
+  - 09:21:26 PM	aa9156d3-494a-497b-84fe-344740414d42	del C:\Windows\System32\important.dll
+
+- Thông tin bổ sung:
+
+  - LogName: Microsoft-Windows-PowerShell/Operational
+
+  - EventCode: 4104
+
+  - EventType: 5 (Verbose ScriptBlock Logging)
+
+  - TaskCategory: Execute a Remote Command
+
+  - User: NOT_TRANSLATED
+
+  - SID: S-1-5-21-2168365451-2537764932-582089911-1000
+
+d. Phân tích sự cố
+
+- Các hành vi như tạo .exe khả nghi, ghi đè file cấu hình hệ thống và xóa file DLL trong thư mục System32 là dấu hiệu rõ ràng của hành vi lạm dụng PowerShell với mục đích phá hoại hoặc cấy mã độc.
+
+- Việc các script này được log lại qua EventCode 4104 cho thấy ScriptBlock Logging đã được bật, giúp ghi nhận chi tiết hành vi.
+
+- Không thấy thông tin xác thực người dùng (User=NOT_TRANSLATED), cần truy vết qua SID hoặc correlation với các sự kiện đăng nhập.
+
+e. Đánh giá tác động
+
+- Nguy cơ bị chiếm quyền kiểm soát hệ thống cao nếu malicious.exe là payload độc hại.
+
+- Việc xóa important.dll có thể dẫn đến lỗi ứng dụng hoặc crash hệ thống.
+
+- Ghi đè config.sys có thể làm hệ điều hành không khởi động đúng cách hoặc gây lỗi bảo mật.
+
+f. Biện pháp đề xuất
+
+- Đã cô lập máy VUTV_B22DCAT318.
+
+- Export toàn bộ log liên quan đến PowerShell, ScriptBlock, và các sự kiện đăng nhập từ máy này.
+
+- Quét toàn bộ hệ thống bằng phần mềm diệt virus (Windows Defender & Malwarebytes).
+
+- Tạm thời vô hiệu hóa quyền sử dụng PowerShell với non-admin users.
